@@ -5,11 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Ant Ecosystem Simulator</title>
 <link rel="icon" type="image/png" href="ant.png">
+
 <meta property="og:title" content="Ant Ecosystem Simulator">
 <meta property="og:description" content="A living evolving ant ecosystem with wars, disasters, Twitch interaction and genetic evolution.">
 <meta property="og:image" content="https://goblinbuggirl.github.io/preview.png">
 <meta property="og:type" content="website">
+
 <script src="https://unpkg.com/tmi.js@1.8.5/dist/tmi.min.js"></script>
+
 <style>
 
 body{
@@ -50,19 +53,27 @@ font-size:12px;
 
 </style>
 </head>
+
 <body>
+
+<canvas id="sim"></canvas>
+
 <div id="overlay">
+
 <div class="panel">
 <b>Ecosystem</b>
 <div id="time">Time</div>
 <div id="colonies">Colonies</div>
 <div id="population">Population</div>
 </div>
+
 <div class="panel">
 <b>Events</b>
 <div id="eventFeed"></div>
 </div>
+
 </div>
+
 <script>
 
 /* ================= CANVAS ================= */
@@ -235,7 +246,7 @@ for(let dy=-1;dy<=1;dy++){
 let x=gx+dx
 let y=gy+dy
 
-if(pheromones[x] && pheromones[x][y]>best){
+if(pheromones[x] && pheromones[x][y] !== undefined && pheromones[x][y]>best){
 
 best=pheromones[x][y]
 bestDir=Math.atan2(dy,dx)
@@ -264,6 +275,14 @@ this.y+=Math.sin(this.dir)*this.speed
 if(this.x<0||this.x>WIDTH)this.dir=Math.PI-this.dir
 if(this.y<0||this.y>HEIGHT)this.dir=-this.dir
 
+/* deposit pheromone */
+
+let gx=Math.floor(this.x/PHEROMONE_SIZE)
+let gy=Math.floor(this.y/PHEROMONE_SIZE)
+
+if(pheromones[gx] && pheromones[gx][gy] !== undefined)
+pheromones[gx][gy]+=0.2
+
 }
 
 draw(){
@@ -291,9 +310,7 @@ ctx.fill()
 /* ================= GENETICS ================= */
 
 function mutate(v,amount){
-
 return v+(Math.random()*amount*2-amount)
-
 }
 
 /* ================= COLONY ================= */
@@ -528,4 +545,3 @@ loop()
 </script>
 </body>
 </html>
-:::
